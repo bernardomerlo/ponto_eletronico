@@ -52,12 +52,4 @@ jobs:
       - name: Run tests
         run: ./mvnw test
         env:
-          POSTGRES_DB: local_db
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: local_user
-          POSTGRES_PASSWORD: local_password
-          DATABASE_URL: jdbc:postgresql://localhost:5432/local_db
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/local_db
-          SPRING_DATASOURCE_USERNAME: local_user
-          SPRING_DATASOURCE_PASSWORD: local_password
+          SPRING_PROFILES_ACTIVE: test
