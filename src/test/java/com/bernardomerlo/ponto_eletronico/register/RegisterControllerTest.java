@@ -1,4 +1,4 @@
-package com.bernardomerlo.ponto_eletronico.login;
+package com.bernardomerlo.ponto_eletronico.register;
 
 import com.bernardomerlo.ponto_eletronico.entities.User;
 import com.bernardomerlo.ponto_eletronico.enums.RoleEnum;
@@ -18,8 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class LoginControllerTest {
-
+class RegisterControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,33 +32,37 @@ public class LoginControllerTest {
     }
 
     @Test
-    void deveAutenticarUsuarioComDadosValidos() throws Exception {
+    void deveRegistrarNovoUsuarioComSucesso() throws Exception {
         String json = """
                 {
+                    "name": "Novo Usuário",
+                    "email": "novo@email.com",
+                    "password": "senha123"
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.message").value("User created successfully"));
+    }
+
+    @Test
+    void deveRecusarRegistroComEmailDuplicado() throws Exception {
+        String json = """
+                {
+                    "name": "Bernardo",
                     "email": "bernardomerlo49@gmail.com",
                     "password": "12345"
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/users/login")
+        mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists())
-                .andExpect(jsonPath("$.role").value("EMPLOYEE"));
-    }
-
-    @Test
-    void deveRecusarLoginComEmailInvalido() throws Exception {
-        mockMvc.perform(post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                    {
-                                        "email": "email-invalido",
-                                        "password": "senha123"
-                                    }
-                                """))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Email inválido"));
+                .andExpect(jsonPath("$.message").value("Esse email já encontra-se cadastrado"));
     }
 }

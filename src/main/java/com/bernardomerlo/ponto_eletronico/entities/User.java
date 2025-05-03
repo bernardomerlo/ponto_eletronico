@@ -48,4 +48,8 @@ public class User {
     public RoleEnum getRole() {
         return role;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
