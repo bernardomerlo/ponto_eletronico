@@ -1,0 +1,60 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16.0-alpine3.18
+        env:
+          POSTGRES_DB: local_db
+          POSTGRES_USER: local_user
+          POSTGRES_PASSWORD: local_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U local_user"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h localhost -U local_user; then
+              echo "Postgres is ready!"
+              break
+            fi
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
+      - name: Run tests
+        run: ./mvnw test
+        env:
+          POSTGRES_DB: local_db
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: local_user
+          POSTGRES_PASSWORD: local_password
+          DATABASE_URL: jdbc:postgresql://localhost:5432/local_db
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/local_db
+          SPRING_DATASOURCE_USERNAME: local_user
+          SPRING_DATASOURCE_PASSWORD: local_password
