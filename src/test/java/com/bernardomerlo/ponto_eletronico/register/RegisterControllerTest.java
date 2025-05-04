@@ -4,6 +4,7 @@ import com.bernardomerlo.ponto_eletronico.entities.User;
 import com.bernardomerlo.ponto_eletronico.enums.RoleEnum;
 import com.bernardomerlo.ponto_eletronico.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,7 +33,8 @@ class RegisterControllerTest {
     }
 
     @Test
-    void deveRegistrarNovoUsuarioComSucesso() throws Exception {
+    @DisplayName("deve registrar novo usuario com sucesso")
+    void shoulRegisterUserWithSucess() throws Exception {
         String json = """
                 {
                     "name": "Novo Usuário",
@@ -50,7 +52,8 @@ class RegisterControllerTest {
     }
 
     @Test
-    void deveRecusarRegistroComEmailDuplicado() throws Exception {
+    @DisplayName("deve recusar registro com email duplicado")
+    void shoulNotRegisterUserWithSucess() throws Exception {
         String json = """
                 {
                     "name": "Bernardo",

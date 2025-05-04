@@ -7,6 +7,7 @@ import com.bernardomerlo.ponto_eletronico.records.LoginResponse;
 import com.bernardomerlo.ponto_eletronico.repositories.UserRepository;
 import com.bernardomerlo.ponto_eletronico.services.JwtService;
 import com.bernardomerlo.ponto_eletronico.services.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -22,7 +23,8 @@ class LoginServiceTest {
     private final UserService userService = new UserService(userRepository, jwtService);
 
     @Test
-    void deveRetornarTokenEPerfilComCredenciaisValidas() {
+    @DisplayName("deve retornar token e perfil pom credenciais validas")
+    void shouldReturnValidToken() {
         var user = new User("João", "joao@email.com", "123456", RoleEnum.EMPLOYEE);
         var request = new LoginRequest("joao@email.com", "123456");
 
@@ -36,7 +38,8 @@ class LoginServiceTest {
     }
 
     @Test
-    void deveLancarErroComEmailInvalido() {
+    @DisplayName("deve lancar erro com email invalido")
+    void shouldReturnErroEmailInvalido() {
         var request = new LoginRequest("naoexiste@email.com", "qualquer");
 
         when(userRepository.findByEmail(request.email())).thenReturn(Optional.empty());
@@ -49,7 +52,8 @@ class LoginServiceTest {
     }
 
     @Test
-    void deveLancarErroComSenhaInvalida() {
+    @DisplayName("deve lancar erro com senha invalida")
+    void shouldReturnSenhaInvalida() {
         var user = new User("João", "joao@email.com", "123456", RoleEnum.EMPLOYEE);
         var request = new LoginRequest("joao@email.com", "errada");
 

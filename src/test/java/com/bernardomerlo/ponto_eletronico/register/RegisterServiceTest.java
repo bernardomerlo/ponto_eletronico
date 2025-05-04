@@ -7,6 +7,7 @@ import com.bernardomerlo.ponto_eletronico.records.RegisterRequest;
 import com.bernardomerlo.ponto_eletronico.records.RegisterResponse;
 import com.bernardomerlo.ponto_eletronico.repositories.UserRepository;
 import com.bernardomerlo.ponto_eletronico.services.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -22,7 +23,8 @@ class RegisterServiceTest {
     private final UserService userService = new UserService(userRepository, null);
 
     @Test
-    void deveRegistrarUsuarioComDadosValidos() {
+    @DisplayName("deve registrar usuario com dados validos")
+    void shouldRegisterUserWithValidData() {
         RegisterRequest request = new RegisterRequest("João", "joao@email.com", "senha123");
 
         when(userRepository.findByEmail("joao@email.com")).thenReturn(Optional.empty());
@@ -40,7 +42,8 @@ class RegisterServiceTest {
     }
 
     @Test
-    void deveLancarErroAoRegistrarEmailExistente() {
+    @DisplayName("deve lancar erro ao tentar registrar usuario com dados invalidos")
+    void shouldNotRegisterUserWithInvalidData() {
         var user = new User("João", "joao@email.com", "senha123", RoleEnum.EMPLOYEE);
         RegisterRequest request = new RegisterRequest("João", "joao@email.com", "senha123");
 

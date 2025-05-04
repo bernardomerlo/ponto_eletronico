@@ -4,6 +4,7 @@ import com.bernardomerlo.ponto_eletronico.entities.User;
 import com.bernardomerlo.ponto_eletronico.enums.RoleEnum;
 import com.bernardomerlo.ponto_eletronico.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,7 +34,8 @@ public class LoginControllerTest {
     }
 
     @Test
-    void deveAutenticarUsuarioComDadosValidos() throws Exception {
+    @DisplayName("deve autenticar usuario com dados validos")
+    void authWithSucess() throws Exception {
         String json = """
                 {
                     "email": "bernardomerlo49@gmail.com",
@@ -50,7 +52,8 @@ public class LoginControllerTest {
     }
 
     @Test
-    void deveRecusarLoginComEmailInvalido() throws Exception {
+    @DisplayName("deve recusar login com email invalido")
+    void notAuthWithSucess() throws Exception {
         mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
