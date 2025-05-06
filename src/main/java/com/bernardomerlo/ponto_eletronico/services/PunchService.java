@@ -6,10 +6,15 @@ import com.bernardomerlo.ponto_eletronico.enums.PunchType;
 import com.bernardomerlo.ponto_eletronico.exceptions.InvalidPunchException;
 import com.bernardomerlo.ponto_eletronico.exceptions.UnknownUserException;
 import com.bernardomerlo.ponto_eletronico.records.PunchResponse;
+import com.bernardomerlo.ponto_eletronico.records.ReportsRequest;
+import com.bernardomerlo.ponto_eletronico.records.ReportsResponse;
 import com.bernardomerlo.ponto_eletronico.repositories.PunchRepository;
 import com.bernardomerlo.ponto_eletronico.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PunchService {
@@ -36,4 +41,12 @@ public class PunchService {
         return new PunchResponse("Ponto registrado com sucesso", punchClock.getTimestamp());
     }
 
+    public ReportsResponse reports(ReportsRequest reportsRequest) {
+        List<PunchClock> punchedClocks = this.punchRepository.findByTimestampBetween(reportsRequest.startDate(), reportsRequest.endDate());
+        List<>
+        for(PunchClock punchClock : punchedClocks) {
+
+        }
+        return null;
+    };
 }
