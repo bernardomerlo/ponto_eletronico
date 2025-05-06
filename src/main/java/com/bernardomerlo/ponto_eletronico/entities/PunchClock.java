@@ -19,7 +19,6 @@ public class PunchClock {
     private LocalDateTime timestamp;
 
     public PunchClock() {
-
     }
 
     public LocalDateTime getTimestamp() {
@@ -32,7 +31,21 @@ public class PunchClock {
         this.timestamp = LocalDateTime.now();
     }
 
+    public PunchClock(User user, PunchType type, LocalDateTime timestamp) {
+        this.user = user;
+        this.type = type;
+        this.timestamp = timestamp;
+    }
+
     public PunchType getType() {
         return type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
     }
 }
