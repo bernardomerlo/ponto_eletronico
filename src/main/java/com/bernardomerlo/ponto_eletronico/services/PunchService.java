@@ -63,19 +63,16 @@ public class PunchService {
                 .stream()
                 .sorted(Comparator.comparing(PunchClock::getTimestamp))
                 .toList();
-        System.out.println("todos " + allPunches);
 
         Map<LocalDate, List<PunchClock>> punchesPerDay = allPunches.stream()
                 .collect(Collectors.groupingBy(pc -> pc.getTimestamp().toLocalDate(),
                         LinkedHashMap::new,
                         Collectors.toList()));
-        System.out.println("perday " + punchesPerDay);
 
         DateTimeFormatter hourFmt = DateTimeFormatter.ofPattern("HH:mm");
         List<HistoryResponse> response = new ArrayList<>();
-        int tmpID = 1;
         for (var entry : punchesPerDay.entrySet()) {
-            System.out.println("entry " + entry);
+            int id = 0;
             LocalDate day = entry.getKey();
             List<PunchClock> punches = entry.getValue();
 
@@ -83,6 +80,7 @@ public class PunchService {
             LocalDateTime openCheckIn = null;
 
             for (PunchClock p : punches) {
+                id += p.getId();
                 if (p.getType() == PunchType.CHECK_IN) {
                     openCheckIn = p.getTimestamp();
                 } else if (p.getType() == PunchType.CHECK_OUT && openCheckIn != null) {
@@ -102,17 +100,33 @@ public class PunchService {
                     .reduce((first, second) -> second)
                     .map(pc -> pc.getTimestamp().toLocalTime())
                     .orElse(null);
-
+            String value = formatHour(total).toString().replace(".", ":");
             response.add(new HistoryResponse(
-                    tmpID,
+                    id,
                     day.toString(),
                     firstIn != null ? firstIn.format(hourFmt) : null,
                     lastOut != null ? lastOut.format(hourFmt) : null,
-                    BigDecimal.valueOf(total.toMinutes())
-                            .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP)
+                    value
             ));
         }
         return response;
     }
 
+    private static BigDecimal formatHour(Duration duration) {
+        int hours = duration.toHoursPart();
+        int minutes = duration.toMinutesPart();
+        int seconds = duration.toSecondsPart();
+
+        if (seconds > 0) {
+            minutes++;
+        }
+        if (minutes == 60) {
+            hours++;
+            minutes = 0;
+        }
+
+        return BigDecimal.valueOf(hours)
+                .add(BigDecimal.valueOf(minutes)
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.UNNECESSARY));
+    }
 }

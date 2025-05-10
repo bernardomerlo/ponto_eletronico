@@ -21,10 +21,12 @@ public class PunchClock {
     public PunchClock() {
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public PunchClock(Long id, User user, PunchType type, LocalDateTime timestamp) {
+        this.id = id;
+        this.user = user;
+        this.type = type;
+        this.timestamp = timestamp;
     }
-
     public PunchClock(User user, PunchType type) {
         this.user = user;
         this.type = type;
@@ -48,4 +50,9 @@ public class PunchClock {
     public User getUser() {
         return user;
     }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
 }

@@ -29,9 +29,7 @@ public class PunchController {
 
     @GetMapping("/history")
     public ResponseEntity<List<HistoryResponse>> history(@AuthenticationPrincipal Long userId) {
-        System.out.println("Received userId in history: " + userId); // ADD THIS LINE
         List<HistoryResponse> history = punchService.history(userId);
-        System.out.println("Returned history: " + history);
         return ResponseEntity.ok(history);
     }
 

@@ -45,22 +45,47 @@ public class HistoryServiceTest {
 
         List<HistoryResponse> history = punchService.history(userId);
 
-        assertEquals(1, history.size());
-        HistoryResponse h = history.getFirst();
+        assertEquals(4, history.size());
+        HistoryResponse h = history.get(0);
 
         assertEquals("2025-05-04", h.date());
         assertEquals("08:00", h.checkInHour());
+        assertEquals("12:00", h.checkOutHour());
+        assertEquals("4:00", h.hoursWorked());
+
+        h = history.get(1);
+        assertEquals("2025-05-05", h.date());
+        assertEquals("13:00", h.checkInHour());
         assertEquals("17:00", h.checkOutHour());
-        assertEquals(new BigDecimal("8.00"), h.hoursWorked());
+        assertEquals("4:00", h.hoursWorked());
+
+        h = history.get(2);
+        assertEquals("2025-05-06", h.date());
+        assertEquals("11:43", h.checkInHour());
+        assertEquals("12:05", h.checkOutHour());
+        assertEquals("0:22", h.hoursWorked());
+
+        h = history.get(3);
+        assertEquals("2025-05-07", h.date());
+        assertEquals("22:14", h.checkInHour());
+        assertEquals("22:27", h.checkOutHour());
+        assertEquals("0:13", h.hoursWorked());
     }
 
     private static List<PunchClock> getPunchClocks(User user) {
-        LocalDate day = LocalDate.of(2025, 5, 4);
+        LocalDate dayOne = LocalDate.of(2025, 5, 4);
+        LocalDate dayTwo = dayOne.plusDays(1);
+        LocalDate dayThree = dayTwo.plusDays(1);
+        LocalDate dayFour = dayThree.plusDays(1);
         return List.of(
-                new PunchClock(user, PunchType.CHECK_IN, LocalDateTime.of(day, LocalTime.of(8, 0))),
-                new PunchClock(user, PunchType.CHECK_OUT, LocalDateTime.of(day, LocalTime.of(12, 0))),
-                new PunchClock(user, PunchType.CHECK_IN, LocalDateTime.of(day, LocalTime.of(13, 0))),
-                new PunchClock(user, PunchType.CHECK_OUT, LocalDateTime.of(day, LocalTime.of(17, 0)))
+                new PunchClock(1L, user, PunchType.CHECK_IN, LocalDateTime.of(dayOne, LocalTime.of(8, 0))),
+                new PunchClock(2L, user, PunchType.CHECK_OUT, LocalDateTime.of(dayOne, LocalTime.of(12, 0))),
+                new PunchClock(3L, user, PunchType.CHECK_IN, LocalDateTime.of(dayTwo, LocalTime.of(13, 0))),
+                new PunchClock(4L, user, PunchType.CHECK_OUT, LocalDateTime.of(dayTwo, LocalTime.of(17, 0))),
+                new PunchClock(5L, user, PunchType.CHECK_IN, LocalDateTime.of(dayThree, LocalTime.of(11, 43))),
+                new PunchClock(6L, user, PunchType.CHECK_OUT, LocalDateTime.of(dayThree, LocalTime.of(12, 5))),
+                new PunchClock(7L, user, PunchType.CHECK_IN, LocalDateTime.of(dayFour, LocalTime.of(22, 14, 7))),
+                new PunchClock(8L, user, PunchType.CHECK_OUT, LocalDateTime.of(dayFour, LocalTime.of(22, 27, 1)))
         );
     }
 }
